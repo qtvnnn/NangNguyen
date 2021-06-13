@@ -1,11 +1,8 @@
 <template>
   <div id="app">
     <div id="overlay-common" />
-    <BaseHeader v-if="authenticated" @authenticated="setAuthenticated"/>
-    <div id="nav">
-      <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
-    </div>
-    <router-view @authenticated="setAuthenticated" />
+    <BaseHeader/>
+    <router-view />
   </div>
 </template>
 
@@ -19,25 +16,9 @@ export default {
   },
   data () {
     return {
-      authenticated: true,
-      mockAccount: {
-        username: 'admin',
-        password: 'admin'
-      }
-    }
-  },
-  mounted () {
-    if (!this.authenticated) {
-      this.$router.replace({ name: 'Login' })
     }
   },
   methods: {
-    setAuthenticated (status) {
-      this.authenticated = status
-    },
-    logout () {
-      this.authenticated = false
-    }
   }
 }
 </script>

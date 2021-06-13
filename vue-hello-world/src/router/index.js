@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
-import Counter from '@/components/Counter'
+import ArticleList from '@/components/ArticleList'
 import ProductList from '@/components/ProductList'
 
 Vue.use(Router)
@@ -25,11 +25,11 @@ let router = new Router({
       menuName: 'Login'
     },
     {
-      path: '/counter',
-      name: 'Counter',
-      component: Counter,
+      path: '/articles',
+      name: 'Articles',
+      component: ArticleList,
       isShowLeftMenu: true,
-      menuName: 'Counter'
+      menuName: 'Articles'
     },
     {
       path: '/products',

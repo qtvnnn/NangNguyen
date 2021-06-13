@@ -1,49 +1,52 @@
 <template>
   <div class="hello" id="main-wrapper">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="/"
-          target="_blank"
-        >
-          Home
-        </a>
-      </li>
-      <li>
-        <a
-          href="/login"
-          target="_blank"
-        >
-          Login
-        </a>
-      </li>
-      <li>
-        <a
-          href="/counter"
-          target="_blank"
-        >
-          Counter
-        </a>
-      </li>
-    </ul>
+    <div class="content">
+      <div class="content-title">
+        Advanced Vue.js Component<br />
+        Composition With Container<br />
+        Components
+      </div>
+      <span
+        >Demo application to show how to separate Vue.js components into</span
+      >
+      <span>Container components and Presentational Components</span>
+    </div>
+    <Product :products="listOfProduct" />
+    <Articel :articles="listOfArticle"/>
+    <div class="footer">© Awesome Company</div>
   </div>
 </template>
 
 <script>
+import { get as getProducts } from '../data/product.js'
+import { get as getArtiles } from '../data/article'
+import Product from '@/components/Product'
+import Articel from '@/components/Articel'
 export default {
-  name: 'HelloWorld',
+  components: {
+    Product,
+    Articel
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      listOfProduct: [],
+      listOfArticle: []
     }
+  },
+  async created () {
+    await getProducts({}, 10, 1).then(res => {
+      this.listOfProduct = res && res.data ? res.data : []
+    })
+    await getArtiles({}, 10, 1).then(res => {
+      this.listOfArticle = res && res.data ? res.data : []
+    })
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
 h1, h2 {
   font-weight: normal;
 }
@@ -57,5 +60,19 @@ li {
 }
 a {
   color: #42b983;
+}
+.content {
+  padding-top: 30px;
+  display: grid;
+  text-align: center;
+  &-title {
+    font-size: 24px;
+  }
+}
+.footer {
+  margin-top: 30px;
+  border-top: 1px solid gray;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 </style>
