@@ -2,7 +2,10 @@
   <div class="article">
     <div class="title">Article</div>
     <div class="article-list">
-      <div v-for="(item, index) in articles.slice(0, 3)" :key="index" class="article-item">
+      <div
+        v-for="(item, index) in articles.slice(0, 3)"
+        :key="index" class="article-item"
+      >
         <img :src="item.img" />
         <div class="item-content">
           <div class="item-content-title">{{ item.name }}</div>
@@ -17,10 +20,12 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'ArticleListDashboard',
   props: {
-    msg: String,
-    articles: Array
+    articles: {
+      type: Array,
+      default: () => []
+    }
   }
 }
 </script>

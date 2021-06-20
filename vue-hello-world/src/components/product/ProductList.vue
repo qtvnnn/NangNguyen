@@ -43,6 +43,9 @@
                 {{ scope.label }}
               </div>
             </template>
+            <template v-slot:cell(img)="row">
+              <img class="avatar" :src="row.item.img" />
+            </template>
             <template v-slot:table-colgroup="scope">
               <col
                 v-for="field in scope.fields"
@@ -50,10 +53,15 @@
                 :style="{ width: field.key === 'stt' ? '3%' : '' }"
               />
             </template>
-            <template v-slot:cell(title)="row">
+            <template v-slot:cell(name)="row">
               <router-link :to="`/product/${row.item.name}`">{{
                 row.item.name
               }}</router-link>
+            </template>
+            <template #cell(actions)="row">
+              <b-button variant="danger" @click="info(row.item, row.index, $event.target)">
+                Xoá
+              </b-button>
             </template>
           </b-table>
         </div>
@@ -71,12 +79,17 @@
 
 <script>
 import BasePagination from '@/components/common/BasePagination'
-import { get as getpro } from '../data/product.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ProductList',
   components: {
     BasePagination
+  },
+  computed: {
+    ...mapGetters({
+      listOfProduct: 'product/products'
+    })
   },
   data () {
     return {
@@ -88,40 +101,47 @@ export default {
       },
       totalPages: 0,
       totalRows: 0,
-      listOfProduct: [],
       fieldNames: [
+        {
+          key: 'img',
+          label: 'Avatar'
+        },
         {
           key: 'name',
           label: 'Tên'
         },
         {
+          key: 'categories[0]',
+          label: 'Loại'
+        },
+        {
           key: 'price',
           label: 'Giá'
-        }
+        },
+        { key: 'actions', label: 'Actions' }
       ]
     }
   },
-  async created () {
-    await getpro({}, 10, 1).then(res => {
-      this.listOfProduct = res && res.data ? res.data : []
-    })
+  created () {
+    this.getProducts()
   },
   methods: {
     onChangeNum (pageSize) {
       this.searchForm.currentPage = 1
       this.searchForm.pageSize = pageSize
-      this.layDanhSachHoSoPhanTrang()
+      this.getProducts()
     },
     onChangePages (page) {
       this.searchForm.currentPage = page
-    },
-    async layDanhSachHoSoPhanTrang () {
-      await getpro({}, this.searchForm.pageSize, this.searchForm.currentPage).then(res => {
-        this.listOfProduct = res && res.data ? res.data : []
-      })
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.avatar{
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+}
+</style>

@@ -43,6 +43,9 @@
                 {{ scope.label }}
               </div>
             </template>
+            <template v-slot:cell(img)="row">
+              <img class="avatar" :src="row.item.img" />
+            </template>
             <template v-slot:table-colgroup="scope">
               <col
                 v-for="field in scope.fields"
@@ -50,10 +53,15 @@
                 :style="{ width: field.key === 'stt' ? '3%' : '' }"
               />
             </template>
-            <template v-slot:cell(title)="row">
-              <router-link :to="`/product/${row.item.name}`">{{
+            <template v-slot:cell(name)="row">
+              <router-link :to="`/article/${row.item.name}`">{{
                 row.item.name
               }}</router-link>
+            </template>
+            <template #cell(actions)="row">
+              <b-button variant="danger" @click="info(row.item, row.index, $event.target)">
+                Xoá
+              </b-button>
             </template>
           </b-table>
         </div>
@@ -71,12 +79,17 @@
 
 <script>
 import BasePagination from '@/components/common/BasePagination'
-import { get as getArticle } from '../data/article.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ProductList',
   components: {
     BasePagination
+  },
+  computed: {
+    ...mapGetters({
+      listOfArticle: 'article/articles'
+    })
   },
   data () {
     return {
@@ -88,8 +101,11 @@ export default {
       },
       totalPages: 0,
       totalRows: 0,
-      listOfArticle: [],
       fieldNames: [
+        {
+          key: 'img',
+          label: 'Avatar'
+        },
         {
           key: 'name',
           label: 'Tên'
@@ -97,31 +113,41 @@ export default {
         {
           key: 'categories[0]',
           label: 'Loại'
-        }
+        },
+        {
+          key: 'text',
+          label: 'Mô tả'
+        },
+        { key: 'actions', label: 'Actions' }
       ]
     }
   },
-  async created () {
-    await getArticle({}, 10, 1).then(res => {
-      this.listOfArticle = res && res.data ? res.data : []
-    })
+  created () {
+    this.getArticles()
   },
   methods: {
     onChangeNum (pageSize) {
       this.searchForm.currentPage = 1
       this.searchForm.pageSize = pageSize
-      this.layDanhSachHoSoPhanTrang()
+      this.getArticles()
     },
     onChangePages (page) {
       this.searchForm.currentPage = page
     },
-    async layDanhSachHoSoPhanTrang () {
-      await getArticle({}, this.searchForm.pageSize, this.searchForm.currentPage).then(res => {
-        this.listOfArticle = res && res.data ? res.data : []
-      })
+    getArticles () {
+      this.$store.dispatch('article/getArticles', this.searchForm)
+    },
+    getProducts () {
+      this.$store.dispatch('product/getProducts', this.searchForm)
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.avatar{
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+}
+</style>

@@ -2,7 +2,10 @@
   <div class="product">
     <div class="product-title">Product</div>
     <div class="product-list">
-      <div v-for="(item, index) in products.slice(0, 3)" :key="index" class="product-list-item">
+      <div
+        v-for="(item, index) in products.slice(0, 3)"
+        :key="index" class="product-list-item"
+      >
         <img :src="item.img" />
         <div class="item-info">
           <div class="product-name">{{ item.name }}</div>
@@ -15,10 +18,13 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'ProductListDashboard',
   props: {
     msg: String,
-    products: Array
+    products: {
+      type: Array,
+      default: () => []
+    }
   }
 
 }

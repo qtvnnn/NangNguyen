@@ -18,29 +18,54 @@
 </template>
 
 <script>
-import { get as getProducts } from '../data/product.js'
-import { get as getArtiles } from '../data/article'
-import Product from '@/components/Product'
-import Articel from '@/components/Articel'
+import { mapGetters } from 'vuex'
+import Product from '@/components/product/Product'
+import Articel from '@/components/article/Articel'
 export default {
   components: {
     Product,
     Articel
   },
+  computed: {
+    ...mapGetters({
+      listOfProduct: 'product/products'
+    }),
+    ...mapGetters({
+      listOfArticle: 'article/articles'
+    })
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      listOfProduct: [],
-      listOfArticle: []
+      searchForm: {
+        title: '',
+        description: '',
+        pageSize: 10,
+        currentPage: 1
+      },
+      totalPages: 0,
+      totalRows: 0,
+      msg: 'Welcome to Your Vue.js App'
     }
   },
   async created () {
-    await getProducts({}, 10, 1).then(res => {
-      this.listOfProduct = res && res.data ? res.data : []
-    })
-    await getArtiles({}, 10, 1).then(res => {
-      this.listOfArticle = res && res.data ? res.data : []
-    })
+    this.getArticles()
+    this.getProducts()
+  },
+  methods: {
+    onChangeNum (pageSize) {
+      this.searchForm.currentPage = 1
+      this.searchForm.pageSize = pageSize
+      this.getArticles()
+    },
+    onChangePages (page) {
+      this.searchForm.currentPage = page
+    },
+    getArticles () {
+      this.$store.dispatch('article/getArticles', this.searchForm)
+    },
+    getProducts () {
+      this.$store.dispatch('product/getProducts', this.searchForm)
+    }
   }
 }
 </script>
