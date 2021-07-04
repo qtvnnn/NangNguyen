@@ -1,5 +1,5 @@
 <template>
-  <div class="hello" id="main-wrapper">
+  <div>
     <div class="content">
       <div class="content-title">
         Advanced Vue.js Component<br />

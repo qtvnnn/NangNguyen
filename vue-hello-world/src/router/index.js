@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import HelloWorld from '@/views/HelloWorld'
 import Login from '@/components/Login'
 import ArticleList from '@/components/article/ArticleList'
 import Counter from '@/components/Counter'
